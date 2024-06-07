@@ -96,6 +96,7 @@ function maquinaJugo(manzanas, naranjas) {
 console.log(maquinaJugo(2, 4));
 */
 console.log('resumen de las funciones');
+/*
 
 //debemos entender el flujo que tienen los parametros y argumentos, primero llamamos a la funcion añosHataJubilacion le pasamos los 2 argumentos que esta necesita, el añoNacimiento recibira el 2000 y sera el utilizado en la funcion calculoEdad en donde el argumento sera esta mismo parametro, por lo tanto el parametro que espera la funcion calculoEdad sera el mismo que el de la funcion añosHastaJubilacion(no es necesario que lleven los mismos nombres).
 
@@ -114,3 +115,116 @@ const añosHastaJubilacion = function (añoNacimiento, name) {
   }
 };
 console.log(añosHastaJubilacion(1950, 'juan'));
+*/
+console.log('Introduccion a los arrays');
+/*
+
+//los array (matrices en español) es como una gran variable donde podemos tener al mismo tiempo varios datos a los cuales podemos acceder de forma facil y ordenada tanto por los programadores como para el mismo sofware
+
+//EJEMPLO en vez de crear varias variables para varios amigos, los array nos permite ahorrar lineas de codigo y listas todos nuestro amigos dentro de el
+const amigo1 = 'nelson';
+const amigo2 = 'juan';
+const amigo3 = 'pepe';
+
+const friends = ['nelson', 'juan', 'pepe'];
+console.log(friends);
+
+//esta es otra manera de escribir un array, aunque la sintaxis literal es la mas usada. y como se observa los arrays pueden recibir cualquier tipo de dato
+const years = new Array(1991, 1984, 2008, 2020);
+
+//atravez de su indice podremos sacar los datos desde el array a que los array estan basados en indices comenzando con el cero
+console.log(friends[0]);
+console.log(friends[2]);
+
+//con esta propiedad podremos sacar la cantidad de datos que hay en el array
+console.log(friends.length);
+
+//#si queremos obtener el ultimo elemento del array lo podemos hacer de esta manera , especialmente cuando no sabemos cuantos elementos tiene el array
+console.log(friends[friends.length - 1]);
+
+//atravez del indice tambien podemos agregar elementos al array
+friends[2] = 'melisa';
+//si observamos la consola este elemento en la posicion 2, fue reemplazado por mi nueva amiga, y a pesar de que declaramos este array con CONST igual pudimos cambiar un valor del array  y esto es asi ya que los array no es un valor primitivo(los valores primitivos son inmutables)
+console.log(friends);
+
+//ahora lo que NO podeos hacer es reemplazar el array completo
+//const friends = ['juan', 'camilo', 'maria'];
+
+//los array esperan expresiones por lo que podemos calcular datos dentro del mismo, incluso podemos tener array dentro de otros array de forma anidada.
+const firsName = 'nelson';
+const nelson = [firsName, 'rodriguez', 2024 - 1985, 'programador', friends];
+console.log(nelson);
+
+//ejercicio practico con funciones y arrays
+const calcAge = function (birthYear) {
+  return 2024 - birthYear;
+};
+//array que contiene algunos años en los que la funcion calcAge podria resibir como parametros
+const years2 = [1990, 1967, 2002, 2010, 2018];
+
+//llamamos a la funcion y le pasamos algunas de estas edades
+const age1 = calcAge(years2[0]);
+const age2 = calcAge(years2[1]);
+const age3 = calcAge(years2[years2.length - 1]);
+console.log(age1, age2, age3);
+//aun mejor como los array esperan expresiones, le podemos sasar directamente la llamada a la funcion
+const edades = [calcAge(years2[0]), calcAge(years2[1]), calcAge(years2[years2.length - 1])];
+console.log(edades);
+*/
+console.log('operaciones basicas con array(METODOS)');
+/*
+//javascript posee muchas funcion integradas llamadas METODOS ahora veremos algunos metodos que podemos usar en los arrays
+const amigos = ['matias', 'juan', 'pepe', 'anastasia'];
+
+//* PUSH, este agregara un elemento al final del array y nos devolvera como resultado la nueva longitud(length) del array
+let nuevaLongitud = amigos.push('carol');
+console.log(amigos);
+console.log(nuevaLongitud);
+
+//* UNSHIFT este agregara el alemento al comienzo del array, y tambien podremos obtener la nueva longitud
+let nuevaLongitud2 = amigos.unshift('pablo');
+console.log(nuevaLongitud2);
+console.log(amigos);
+
+//* POP este metodo eliminara el ultimo elemento del array, y nos devolvera en este caso el elemento que fue eliminado
+let elementos = amigos.pop();
+console.log(amigos);
+console.log(elementos);
+
+//* SHITF este metodo eliminara el primer elemento del array, y si queremos podemos almacenar el elemento que fue eliminado
+amigos.shift();
+console.log(amigos);
+
+//* INDEXOF este metodo nos permite saber el indice se cierto elemento, de esta manera sabremos donde esta
+console.log(amigos.indexOf('anastasia'));
+
+//* si intentamos obtener un elemento que no esta en el array no obtendremos un error en si , nos arrojara el valor -1
+console.log(amigos.indexOf('jose'));
+
+//* INCLUDES este metodo es parecido a indexOf, pero que en en vez de devolvernos el indice nos devolvera un booleano osea si esta o no el elemento, importante saber que este metodo usa IGUALDAD ESTRICTA, (NO REALIZA COERSION DE TIPO) por lo que debemos tener mucho cuidado al escribir el elemento.
+
+console.log(amigos.includes('juan'));
+amigos.push(23);
+// vemos que nos arroja falso, No realizo el cambio de tipo implicitamente
+console.log(amigos.includes('23'));
+
+//ejemplo practico
+//sabemos que la declaracion if acepta solo valores booleanos, por lo que podriamos incluir ese metodo (includes)dentro de una declaracion if.
+if (amigos.includes('pepe')) {
+  console.log('pepe es parte de la lista de amigos de nelson ');
+} else {
+  console.log('la persona mencionada no es amigo');
+}
+*/
+console.log('OBJETOS');
+//es la segunda estructura de datos y nos permite crear (clave-valor) esto significa que podremos hacer referencia a un elemento a travez de su clave, ademas podemos ingresar al igual que los array cualquier tipo de valor, tambien expresiones. otra cosa importante es que en esta estructura de datos el orden de los elementos no importa a diferencia de los arrays que es muy importante porque es la unica forma en la que podemos acceder a los elementos.
+//* se suele aconsejar usar arrays para datos mas ordenados y usar objetos para datos mas desordenados
+
+//la manera mas comun y facil de crear un objeto es la forma literal
+const nelson = {
+  firstName: 'nelson',
+  lastName: 'jose',
+  age: 2024 - 1999,
+  job: 'teacher',
+  friends: ['pepe', 'juan', 'pedro'],
+};
