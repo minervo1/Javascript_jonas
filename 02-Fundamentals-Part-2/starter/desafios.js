@@ -41,18 +41,94 @@ console.log('desafio 2');
 //   }
 // };
 
-const calcTip1 = boleta =>
-  boleta >= 50 && boleta <= 300 ? boleta * (15 / 100) : boleta * (20 / 100);
+// const calcTip1 = boleta =>
+//   boleta >= 50 && boleta <= 300 ? boleta * (15 / 100) : boleta * (20 / 100);
 
-//2. ¡Y ahora usemos matrices! Así que cree una matriz 'facturas' que contenga los datos de prueba a continuación
-const facturas = [125, 555, 44];
+// //2. ¡Y ahora usemos matrices! Así que cree una matriz 'facturas' que contenga los datos de prueba a continuación
+// const facturas = [125, 555, 44];
 
-//3. Cree una matriz de 'propinas' que contenga el valor de la propina para cada factura, calculado a partir de la función que creó antes
-const propinas = [calcTip1(facturas[0]), calcTip1(facturas[1]), calcTip1(facturas[2])];
-console.log(propinas);
-//4. Bonificación: cree una matriz 'total' que contenga los valores totales, de modo que la factura + la propina
-const total = [facturas[0] + propinas[0], facturas[1] + propinas[1], facturas[2] + propinas[2]];
-console.log(total);
+// //3. Cree una matriz de 'propinas' que contenga el valor de la propina para cada factura, calculado a partir de la función que creó antes
+// const propinas = [calcTip1(facturas[0]), calcTip1(facturas[1]), calcTip1(facturas[2])];
+// console.log(propinas);
+// //4. Bonificación: cree una matriz 'total' que contenga los valores totales, de modo que la factura + la propina
+// const total = [facturas[0] + propinas[0], facturas[1] + propinas[1], facturas[2] + propinas[2]];
+// console.log(total);
 
 //Test data: 125, 555 and 44
 //Sugerencia: recuerde que una matriz necesita un valor en cada posición, ¡y ese valor puede ser en realidad el valor devuelto de una función! Por lo tanto, puede simplemente llamar a una función como valores de matriz (así que no almacene primero los valores de sugerencia en variables separadas, sino directamente en la nueva matriz)
+
+console.log('desafio 3');
+//¡Volvamos a Mark y John comparando sus IMC! Esta vez, usemos objetos para implementar los cálculos! Recuerde: IMC = masa / altura ** 2 = masa / (altura * altura) (masa en kg y altura en metros)
+
+//Datos de prueba: Marks pesa 78 kg y mide 1,69 m. Juan pesa 92 kg y mide 1,95 m. de alto.
+
+//1. Para cada uno de ellos, cree un objeto con propiedades para su nombre completo, masa y altura (Mark Miller y John Smith)
+//2. Cree un método 'calcBMI' en cada objeto para calcular el IMC (el mismo método en ambos objetos). Almacene el valor del IMC en una propiedad y también devuélvalo del método
+// const mark = {
+//   firstName: 'mark',
+//   lastName: 'miller',
+//   mass: 78,
+//   height: 1.69,
+//   calcBMI: function () {
+//     this.imc = this.mass / this.height ** 2;
+//     return this.imc;
+//   },
+// };
+// const john = {
+//   firstName: 'john',
+//   lastName: 'smith',
+//   mass: 92,
+//   height: 1.95,
+//   calcBMI: function () {
+//     this.imc = this.mass / this.height ** 2;
+//     return this.imc;
+//   },
+// };
+
+// //3. Inicie sesión en la consola quién tiene el IMC más alto, junto con el nombre completo y el respectivo IMC. Ejemplo: "¡El IMC de John (28,3) es mayor que el de Mark (23,9)!"
+// console.log(mark.calcBMI());
+// console.log(john.calcBMI());
+// console.log(
+//   `el IMC de mark (${mark.imc}) es ${mark.imc >= john.imc ? 'mayor' : 'menor'} al indice de john (${
+//     john.imc
+//   })`
+// );
+
+console.log('desafio  4');
+/*
+//¡Mejoremos aún más la calculadora de propinas de Steven, esta vez usando bucles!
+const calcTip1 = boleta =>
+  boleta >= 50 && boleta <= 300 ? boleta * (15 / 100) : boleta * (20 / 100);
+
+//1. Cree una matriz 'facturas' que contenga los 10 valores de factura de prueba
+const facturas = [22, 295, 176, 440, 37, 105, 10, 1100, 86, 52];
+//2. Cree matrices vacías para las propinas y los totales ("propinas" y "totales")
+let propinas = [];
+let totales = [];
+//3. Utilice la función 'calcTip' que escribimos antes (no es necesario repetirla) para calcular propinas y valores totales (factura + propina) para cada valor de factura en la matriz de facturas. Utilice un bucle para realizar los 10 cálculos!
+for (let i = 0; i < facturas.length; i++) {
+  propinas.push(calcTip1(facturas[i]));
+  totales.push(propinas[i] + facturas[i]);
+}
+console.log(propinas);
+console.log(totales);
+//Datos de prueba: 22, 295, 176, 440, 37, 105, 10, 1100, 86 y 52
+//Sugerencias: llame a 'calcTip' en el bucle y use el método push para agregar valores al consejos y matrices de totales
+
+//4. Bonificación: escriba una función 'calcAverage' que tome una matriz llamada 'arr' com un argumento. Esta función calcula el promedio de todos los números en el dado formación. ¡Este es un desafío difícil (no lo hemos hecho antes)! Aquí se explica cómo resuélvelo:
+//4.1. Primero, deberá sumar todos los valores de la matriz. Para hacer la suma, comience creando una variable 'suma' que comience en 0. Luego recorra el matriz usando un bucle for. En cada iteración, agregue el valor actual al variable 'suma'. De esta manera, al final del ciclo, tendrás todos los valores. agregado junto
+//4.2. Para calcular el promedio, divide la suma que calculaste antes por la longitud de la matriz (porque esa es la cantidad de elementos)
+//4.3. Llame a la función con la matriz 'totales'
+
+const calcAverage = function (arr) {
+  let suma = 0;
+  for (let i = 0; i < arr.length; i++) {
+    //suma = suma + arr[i];
+    suma += arr[i];
+  }
+  console.log(suma);
+  return suma / arr.length;
+};
+
+console.log(calcAverage(totales));
+*/

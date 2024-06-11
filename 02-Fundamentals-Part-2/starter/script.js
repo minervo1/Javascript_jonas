@@ -217,14 +217,179 @@ if (amigos.includes('pepe')) {
 }
 */
 console.log('OBJETOS');
-//es la segunda estructura de datos y nos permite crear (clave-valor) esto significa que podremos hacer referencia a un elemento a travez de su clave, ademas podemos ingresar al igual que los array cualquier tipo de valor, tambien expresiones. otra cosa importante es que en esta estructura de datos el orden de los elementos no importa a diferencia de los arrays que es muy importante porque es la unica forma en la que podemos acceder a los elementos.
+/*
+//es la segunda estructura de datos y nos permite crear (clave-valor) esto significa que podremos hacer referencia a un elemento a travez de su clave, ademas podemos ingresar al igual que los array cualquier tipo de valor, tambien expresiones, funciones(son un tipo de valor) y otros objetos. otra cosa importante es que en esta estructura de datos el orden de los elementos no importa a diferencia de los arrays que es muy importante porque es la unica forma en la que podemos acceder a los elementos(indice)
 //* se suele aconsejar usar arrays para datos mas ordenados y usar objetos para datos mas desordenados
 
-//la manera mas comun y facil de crear un objeto es la forma literal
-const nelson = {
-  firstName: 'nelson',
-  lastName: 'jose',
-  age: 2024 - 1999,
-  job: 'teacher',
+//la manera mas comun y facil de crear un objeto es la forma literal y se componen de una propiedad y su valor
+// const nelson = {
+//   firstName: 'nelson',
+//   lastName: 'jose',
+//   añoNacimiento: 1991,
+//   job: 'teacher',
+//   friends: ['pepe', 'juan', 'pedro'],
+//   hasDriverLicence: true,
+//   //asi como tenemos csdenas, numeros, booleanos de valor tambien podemos tener funciones como valor. el tipo de funcion que podemos usar en un objeto es de tipo expresion, ademas a toda funcion atada a un objeto se le denomina metodo
+//   calcAge: function (añoNacimiento) {
+//     return 2024 - añoNacimiento;
+//   },
+// };
+
+//podemos llamar a una funcion dentro de un objeto de 2 formas
+// console.log(nelson.calcAge(1991));
+// console.log(nelson['calcAge'](1991));
+
+//# el ejemplo que acabamos de ver arriba no es lo ideal, porque estamos repitiendo codigo, ya que al llamar a la funcion le estamos pasando el año de nacimiento, pero este año de nacimiento ya esta definido en nuestro objeto.
+
+//esta es la forma correcta si ya tenemos el dato que nesecitamos en el mismo objeto. la palabra reservada THIS DESPUES, pero lo que necesitamos saber ahora es que esta palabra se crea cuando creamos la funcion y que esta apuntara al objeto que llama a la funcion o al objeto que posee dentro de el la funcion(metodo) en este caso this apunta a montserrat por lo tanto.
+// const montserrat = {
+//   firstName: 'montserrat',
+//   lastName: 'jose',
+//   añoNacimiento: 2015,
+//   job: 'teacher',
+//   friends: ['pepe', 'juan', 'pedro'],
+//   hasDriverLicence: true,
+//   calcAge: function () {
+//     return 2024 - this.añoNacimiento;
+//   },
+// };
+// console.log(montserrat.calcAge());
+
+//¿que pasa si necesitamos la edad en varias partes de mi aplicasion? bueno podriamos llamar a este metodo en todos esos lugares, pero pasa que cada vez que llamamos a esta funcion se realizara el calculo y eso no es una buena tecnica. lo ideal seria realizar el calculo solo 1 vez de esta manera podemos disminuir la carga en los procesos internos de la aplicasion.
+
+//lo que hacemos es almacenar la edad en una nueva propiedad(asi creamos una) y al momento de utilizar la edad solo la llamamos
+// const montserrat1 = {
+//   firstName: 'montserrat',
+//   lastName: 'jose',
+//   añoNacimiento: 2015,
+//   job: 'teacher',
+//   friends: ['pepe', 'juan', 'pedro'],
+//   hasDriverLicence: true,
+//   calcAge: function () {
+//     this.age = 2024 - this.añoNacimiento;
+//     //no es necesario devolver la edad , pero una buena practica hacerlo
+//     return this.age;
+//   },
+// };
+// console.log(montserrat1.calcAge());
+// console.log(montserrat1.age);
+// console.log(montserrat1.age);
+// console.log(montserrat1.age);
+
+//DESAFIO, CREAR UN METODO QUE IMPRIMA POR PANTALLA TODOS LOS DATOS DE MONTSERRAT
+const montserrat2 = {
+  firstName: 'montserrat',
+  lastName: 'comte',
+  añoNacimiento: 2015,
+  job: 'juguetona',
   friends: ['pepe', 'juan', 'pedro'],
+  hasDriverLicence: false,
+  calcAge: function () {
+    this.age = 2024 - this.añoNacimiento;
+    return this.age;
+  },
+  //llamamos a la funcion calcAge directamente ya que si esta funcion no es llamada luego, la edad sera indefinido.(podriamos haber usado montserrat2.age, pero dependeriamos de que esta funcion sea llamada luego tambien). hacerlo asi es una buena practica (//* this.calcAge es lo mismo que montserrat2.calcAge. ya que this apunta a montserrat2)
+  datosMontse: function () {
+    return `${this.firstName} ${
+      this.lastName
+    } es una niña de ${this.calcAge()} años y de profesion ${this.job} que ${
+      this.hasDriverLicence ? 'tiene' : 'no tiene'
+    } licencia de conducir.
+    `;
+  },
 };
+
+console.log(montserrat2.datosMontse());
+*/
+console.log('the for loop');
+/*
+// los ciclos nos permitiran realizar una accion varias veces, en esta caso veremos el ciclo FOR
+for (let contador = 1; contador <= 3; contador++) {
+  console.log(`dominada numero ${contador}`);
+}
+
+const jonas = ['jonas', 'rodriguez', 30, 'programador', ['claudio', 'maria', 'pepe']];
+
+//en este ejemplo mas practico, recorremos un array y imprimimos individualmente sus elementos. INPORTAMTE usar la longitud de esta forma(jonas.length) ya que si solo lo definimos por un numero (contador < 5) por ejemplo , si introdujeramos otro elemento al array este no seria imprimido.
+for (let contador = 0; contador < jonas.length; contador++) {
+  console.log(jonas[contador]);
+}
+
+//este ejemplo aun mas practico no solo leemos y imprimimos los valores si no que creamos un nuevo array basado en otro array y le agregamos algo que el original no tenia
+const tipos = [];
+
+for (let i = 0; i < jonas.length; i++) {
+  console.log(jonas[i], typeof jonas[i]);
+  //esta forma de agregar elementos a un array NO es la mas limpia, RECORDAR que tenemos el metodo PUSH, que seria la forma recomendada
+  tipos[i] = typeof jonas[i];
+  //tipos.push(typeof jonas[i]);
+}
+console.log(tipos);
+
+//este ejemplo aun masss practico vemos como calcular las edades basados en los años de nacimiento, algo que ya realizamos antes, pero ahora lo haremos dinamicamente usando el ciclo FOR
+const añosNacimientos = [1991, 2007, 1969, 2020];
+const edades = [];
+for (let i = 0; i < añosNacimientos.length; i++) {
+  edades.push(2024 - añosNacimientos[i]);
+}
+console.log(edades);
+
+//* el ciclo for posee 2 declaraciones muy importante una de ellas ya la mencionamos antes. (break y continue) estas nos permitiran discriminar atravez de diferentes elementos. CONTINUE: podremos salir de la actual iteracion y contunuar con la siguiente en otras palanbras se saltara una iteracion.
+//* BREAK: terminara completamente el ciclo
+//tenemos un array con distintos elementos , pero solo imprimimos los elementos que son cadenas, de esta manera podremos dicriminar que elementos queremos usar
+for (let i = 0; i < jonas.length; i++) {
+  if (typeof jonas[i] !== 'string') continue;
+  console.log(jonas[i], typeof jonas[i]);
+}
+
+//break nos podria servir por ejemplo para que luego de encontrar cierto elemento ya no siga buscando, en este ejemplo imprimira hasta que encuentre un numero luego no imprimira mas(terminara el ciclo)
+for (let i = 0; i < jonas.length; i++) {
+  if (typeof jonas[i] === 'number') break;
+  console.log(jonas[i], typeof jonas[i]);
+}
+*/
+console.log('bucles hacia atras y bucles dentro de otros bucles');
+/*
+const nelson = ['nelson', 'rodriguez', 23, 'ingeniero', ['pepe', 'carola', 'steven']];
+
+//de esta manera leemos hacia tras, RECORDAR que el -1 es porque en los array se comienza desde el cero.
+for (let i = nelson.length - 1; i >= 0; i--) {
+  console.log(i, nelson[i]);
+}
+//bucle dentro de otro bucle
+for (let ejercicio = 1; ejercicio < 4; ejercicio++) {
+  console.log(`-------comenzando ejercicio ${ejercicio}`);
+
+  for (let repet = 1; repet < 6; repet++) {
+    console.log(`ejercicio ${ejercicio} levantamiento ${repet}`);
+  }
+}
+*/
+console.log('Bucle while Loop');
+/*
+
+for (let repe = 1; repe <= 4; repe++) {
+  console.log(`Lifting weights repetition ${repe}🏋️‍♀️`);
+}
+
+//*el ciclo while tiene la misma logica que el for, PERO A DIFERENCIA DE FOR ESTE NO NESECITA DE UN CONTADOR Y LA CONDICION NO NECESARIAMENTE DEBE ESTAR RELACIONADA CON EL CONTADOR (PUEDE SER CUALQUIER CONDICION(BULEANO)) ESTO NOS PERMITE USAR ESTE CICLO UNA MAYOR VARIEDAD DE SITUASIONES.
+
+//en este ejempplo si usamos un contador y este esta relacionado con la condicion, pero eso es por las caracteristicas del ejercicio en si. (como no nesecita un contador (no es parte de su sintaxis)este debemos ponerlo afuera)
+let repe = 1;
+while (repe <= 4) {
+  console.log(`Lifting weights repetition ${repe}🏋️`);
+  repe++;
+}
+
+//en este ejemplo lanzamos un dado y no nesecitamos de un contador ya que no sabemos cuantas veces debe ejecutarse el ciclo , lo hara x veces hasta que salga el numero 6
+//EL METODO RANDOM NOS DEVUELVE UN NUMERO ENTRE (0 Y MENOR QUE UNO (INCLUYE AL O, PERO NO EL 1)) OSEA UN DECIMAL  (0,1 0,245, 0.987) ETC. ESE NUMERO LO MULTIPLICAMOS POR 6 YA QUE UN DADO VA DE 1 A 6, COMO NO INCLUYE AL 1 SIEMPRE FALTARA UN POCO PARA LLEGAR AL NUMERO 6 ES POR ESO QUE DEBEMOS SUMARLE 1 PARA QUE DE 6, PERO ESTE NUMERO NO SERA ENTERO SERA UN DECIMAL , ES POR ESO QUE USAMOS EL METODO 'TRUNC' QUE NOS DEVOLVERA LA PARTE ENTERA DE CUALQUIER DECIMAL.
+
+//# conclusion cada vez que no sepamos las veces que se repetira el ciclo usamos WHILE, pero si de antemano sabemos cuantas veces debe repetirse usaremos FOR porque nesecitaremos un contador y que por lo general suelen ser ajercicios con arrays
+let dado = Math.trunc(Math.random() * 6) + 1;
+
+while (dado !== 6) {
+  console.log(`you rolled dice ${dado}`);
+  dado = Math.trunc(Math.random() * 6) + 1;
+  if (dado === 6) console.log('salio el 6 termino el ciclo');
+}
+*/
