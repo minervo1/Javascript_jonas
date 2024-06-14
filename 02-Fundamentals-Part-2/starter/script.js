@@ -299,7 +299,7 @@ const montserrat2 = {
   },
 };
 
-console.log(montserrat2.datosMontse());
+console.log(montserrat2.datosMontse());|
 */
 console.log('the for loop');
 /*
