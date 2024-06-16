@@ -1,37 +1,51 @@
+<!-- <html>
+  <head>
+    el head es como la configuracion de la pagina en donde podemos poner por ejemplo el titulo, algunos estilos (css), algunos iconos de la pestaña del navegador
+    <title>Aprendiendo HTML y CSS</title>
+    <body>
+      <h1>javascript y css son geniales</h1>
+      <p>
+        es util tener conocimientos de html y css cuando se trabaja con javascript porque van de la
+        mano sobre todo para trabajar con el DOM y manipularlo
+      </p>
+      <p>este es otro parrafo</p>
+      <h6>este es otro encabezado pero mas pequeño.</h6>
+    </body>
+  </head>
+</html> 
+
+ <!--claro que podemos crear esta plantilla de una manera mucho mas facil, solo debemos escribir ! + enter. 
+ la diferencia es que obtuvimos muchas otras cosas como el DOCUMENT que identifica a este archivo como html 5, o el lenguaje que esta establecido en ingles (en)-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link href="style.css" rel="stylesheet" />
-
-    <title>Learning HTML & CSS</title>
+    <link rel="stylesheet" href="estilos.css" />
+    <title>Aprendiendo HTML y CSS</title>
   </head>
   <body>
-    <h1>JavaScript is fun, but so is HTML & CSS!</h1>
-    <p class="first">
-      You can learn JavaScript without HTML and CSS, but for DOM manipulation
-      it's useful to have some basic ideas of HTML & CSS. You can learn more
-      about it
-      <a href="https://www.udemy.com/user/jonasschmedtmann/">on Udemy</a>.
-    </p>
+    <h1>javascript y css son geniales</h1>
 
-    <h2>Another heading</h2>
-    <p class="second">
-      Just another paragraph
+    <p class="primera">
+      es util tener conocimientos de html y css cuando se trabaja con javascript porque van de la
+      mano sobre todo para trabajar con el DOM y manipularlo
     </p>
-
+    <p class="segunda">
+      este parrafo esta en linea con el enlace esto es asi ya que el elemento 'a' lo permite
+      <a href="http://127.0.0.1:8080/04-HTML-CSS/final/"> nelson</a>
+    </p>
+    <h2>otro encabezado este se llama bloque ya que esta solo.</h2>
     <img
-      id="course-image"
-      src="https://img-a.udemycdn.com/course/480x270/437398_46c3_9.jpg"
+      id="imagen-1"
+      src="https://carontestudio.com/blog/wp-content/uploads/2020/05/comentarios-html-1024x683.jpg"
+      alt="20 px"
     />
-
-    <form id="your-name">
-      <h2>Your name here</h2>
-      <p class="first">Please fill in this form :)</p>
-
-      <input type="text" placeholder="Your name" />
+    <form id="nombre">
+      <h2>tu nombre aca</h2>
+      <p class="primera">por favor llena este campo :</p>
+      <input type="text" placeholder="tu nombre" name="" id="" />
       <button>OK!</button>
     </form>
   </body>
