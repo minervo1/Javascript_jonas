@@ -270,10 +270,15 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // BANKIST APP
 //*reemplazamos los datos fijos del html por los datos dinamicos de nuestro objeto
-const displayMovements = function (movements) {
-  //lo primero es limpiar nuestro contenedor de movimientos, sacando los movimientos que estan fijos en el html
+//para implementar el boton sort(ordenar) agregaremos un segundo parametro que determinara el orden segun sea true o false. lo establecemos por defecto false ya que en una primera instancia no queremos ordenar solo ordenaremos cuando se haga click solo hay pasara a ser true.
+const displayMovements = function (movements, sort = false) {
+  //primero limpiamos nuestro contenedor de movimientos, sacando los movimientos que estan fijos en el html
   containerMovements.innerHTML = '';
-  movements.forEach((mov, i) => {
+
+  //si sort es verdadero se creara una copia y ordenara los movimientos ascendentemente, si es false solo mostrara los movimientos tal como estan en el array
+  //IMPORTANTE la copia es inportante porque no queremos cambiar el array original solo mostrar un array ordenado, si modificamos el array original este no volvera a su estado anterior asi que no funcionaria el boton que basicamente cambia de ordenado a natural y viseversa.
+  const moviSort = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  moviSort.forEach((mov, i) => {
     //la variable type la creamos separada ya que la necesitaremos en 2 lugares diferentes
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     //copiamos y pegamos el codigo correspondiente a la seccion de movimientos(es la mejor manera de modificar nuestro html de forma dinamica)
@@ -291,9 +296,10 @@ const displayMovements = function (movements) {
 //displayMovements(account1.movements);
 
 //* calculamos y mostramos el resultado de la suma de todos los movimientos en la interfaz
-const calcDisplayBalance = function (movimientos) {
-  const balance = movimientos.reduce((acum, elem) => acum + elem);
-  labelBalance.textContent = `${balance} €`;
+const calcDisplayBalance = function (cuenta) {
+  //creamos una nueva propiedad 'balance 'en este caso en las cuentas que corresponda a cada objeto
+  cuenta.balance = cuenta.movements.reduce((acum, elem) => acum + elem);
+  labelBalance.textContent = `${cuenta.balance} €`;
 };
 //calcDisplayBalance(account1.movements);
 
@@ -330,21 +336,31 @@ const createUserNames = function (cuentas) {
 };
 //le pasamos el arrays 'accounts' ya que con el ciclo forEach vamos a recorrer cada una de estas
 createUserNames(accounts);
-//para ver si esta funcion esta funcionando
-//console.log(accounts);
+
+//*esta funcion reemplazara el llamado individual que teniamos y la ejecutaremos cada vez que se necesite
+const updateUI = function (cuentaAc) {
+  //mostramos los movimientos
+  displayMovements(cuentaAc.movements);
+  //mostramos la suma. ahora aca necesitamos pasarle la cuenta completa actual y no solo los movimientos
+  calcDisplaySumary(cuentaAc);
+  // mostramos el promedio, aqui tambien necesitamos pasar la cuenta completa
+  calcDisplayBalance(cuentaAc);
+};
+
+//creamos esta variable que es la cuenta actual(que almacenara lo ingresado en el input) en el contexto global porque debe estar disponible siempre ya que la usaremos en muchas partes del codigo
+let currentAccount;
 
 //* implementamos el boton del Login
 btnLogin.addEventListener('click', function (eve) {
   //un boton dentro de un formulario tiene un comportamiento predeterminado que es enviarlo provocando que la pagina se recargue, por lo que debemos detener este comportamiento evitando que se envie el formulario para poder trabajar con este boton con la consola
   //NOTA otra accion predeterminada la tienen los input. actuan como botones al momento de hacer enter en ellos,
   eve.preventDefault();
-  //variable que almacenara lo ingresado en el input
-  let currentAccount;
+
   //encontramos, comparamos y almacenamos lo ingresado en el 'input', pero debemos tener esta informacion disponible para otras acciones a si que la guardamos fuera de la funcion
   currentAccount = accounts.find(
     cuenta => cuenta.userName === inputLoginUsername.value
   );
-  //si iniciamos sesion con un usuario que no exista nos arroja un error ya que 'FIND' al no encontrar coinsidencia arrijara un 'undefined' y en esta sentencia al momento de leer 'currentAccount' que es undefined arrojara el error. ahora debemos solucionar esto evitando que aparesca este error en la consola y para eso usamos 'el encadenamiento opcional (?)' RECORDAR este operador evitara que '.pin' se ejecute si es que lo que esta antes de el es falso evitando el error.
+  //si iniciamos sesion con un usuario que no exista nos arroja un error ya que 'FIND' al no encontrar coinsidencia arrojara un 'undefined' y en esta sentencia al momento de leer 'currentAccount' que es undefined arrojara el error. ahora debemos solucionar esto evitando que aparesca este error en la consola y para eso usamos 'el encadenamiento opcional (?)' RECORDAR este operador evitara que '.pin' se ejecute si es que lo que esta antes de el es falso evitando el error.
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     //mostramos la interfaz al usuario correspondiente, en este caso mostramos solo el primer nombre
     labelWelcome.textContent = `Bienvenido ${
@@ -355,13 +371,75 @@ btnLogin.addEventListener('click', function (eve) {
     //limpiamos los campos del input y le quitamos el foco
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    //mostramos los movimientos
-    displayMovements(currentAccount.movements);
-    //mostramos la suma. ahora aca necesitamos pasarle la cuentya completa
-    calcDisplaySumary(currentAccount);
-    // mostramos el promedio
-    calcDisplayBalance(currentAccount.movements);
+    updateUI(currentAccount);
   }
+});
+//* implementamos el boton para trasferir dinero
+btnTransfer.addEventListener('click', function (eve) {
+  eve.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  //le transferimos a la cuenta que sea igual al 'userName' ingresado en el input
+  const reciverAcc = accounts.find(
+    cuenta => cuenta.userName === inputTransferTo.value
+  );
+  console.log(amount, reciverAcc);
+
+  //con el 'encadenamiento opcional' verificamos si la cuenta que recivira el dinero existe. si existe todo seguira normal, pero si no establecera todo como 'undefined' y todo lo que este despues de operador no se ejecutara RECORDAR que esto tambien podriamos hacerlo con 'amount &&'. ERROR de hecho si vamos a utilizar esta ultima sentencia ('amount &&') porque al escribir cualquier nombre la transferencia se realiza igual esto se debe a que como la cuenta que recibe el dinero no existe el 'encadenamiento opcional' establece hasta ese punto todo como undefined y undefined si es distinto de 'currentAccount.userName' por lo tanto si entrara en el if
+  if (
+    amount > 0 &&
+    reciverAcc && // si la cuenta que recive el dinero existe
+    currentAccount.balance >= amount &&
+    reciverAcc?.userName !== currentAccount.userName
+  ) {
+    //como las sumas y las restas ya estan funcionando solamente debemos agregar estos montos a cada una de las cuentas
+    currentAccount.movements.push(-amount);
+    reciverAcc.movements.push(amount);
+    updateUI(currentAccount);
+  }
+  // por ultimo limpiamos los input
+  inputTransferTo.value = '';
+  inputTransferAmount.value = '';
+  //NOTA esta linea de codigo tambien es lo mismo de hecho ya la tengo escrita asi en otra parte del codigo
+  //inputTransferAmount.value = inputTransferTo.value = '';
+});
+//* implementamos los prestamos
+btnLoan.addEventListener('click', function (eve) {
+  eve.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
+//* implementamos el cierre de la cuenta
+btnClose.addEventListener('click', function (eve) {
+  eve.preventDefault();
+  const userClose = inputCloseUsername.value;
+  const userPin = Number(inputClosePin.value);
+  if (currentAccount.userName === userClose && currentAccount.pin === userPin) {
+    //buscamos y almacenamos el indice de la cuenta que queremos eliminar
+    const index = accounts.findIndex(
+      cuenta => cuenta.userName === currentAccount.userName
+    );
+    //eliminamos la cuenta
+    accounts.splice(index, 1);
+    //una vez eliminada la cuenta procedemos a quitar la opasidad para dejar dever su cuenta
+    containerApp.style.opacity = 0;
+    //por ultimo limpiamos los campos del input
+    inputCloseUsername.value = inputClosePin.value = '';
+  }
+});
+//esta variable necesitamos preservarla es por eso que la creamos afuera, si la creamos dentro de la funcion esta se creara cada vez que se haga click en el boton
+let sorted = false; //es false desde el comienzo porque en el comienzo no esta ordanado el array
+//* implementamos el boton para ordenar los movimientos
+btnSort.addEventListener('click', function (eve) {
+  eve.preventDefault();
+  //al llamar a la funcion es cuando le pasamos el segundo argumento que ocupara esta funcion
+  displayMovements(currentAccount.movements, !sorted);
+  // esto es importante si no la variable sorted nunca cambiaria, basicamente lo que estamos haciendo es cuando sorted sea true cambie a false y si es false cambie a true. basicamennte sea lo opuesto a lo que es ahora.
+  sorted = !sorted;
 });
 ////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
@@ -385,3 +463,226 @@ for (const cuenta of accounts) {
   }
 }
 */
+/*
+console.log('INCLUDE, SOME Y EVERY');
+//ahora veremos los ultimos metodos por aprender en esta seccion que nos ayudaran a terminar nuestra aplicasion
+
+//con este metodo podemos saber si existe cierto elemento en el array, inportante esto es una igualdad
+console.log(account1.movements);
+console.log(account1.movements.includes(-130));
+
+//a diferencia de este otro metodo donde podremos darle una condicion para buscar alguna coincidencia
+const cualquierM = account1.movements.some(mov => mov > 0);
+console.log(cualquierM);
+
+// usar INCLUDES  es como realizar esto con SOME, lo cual no tiene mucho sentido, por eso existe INCLUDES
+console.log(account1.movements.some(mov => mov === -130));
+
+//veamos el metodo EVERY que es como el primo de SOME a diferencia de SOME este nos devolvera un bboleano si todos los elementos satisfacen la dondicion dada.
+console.log(account1.movements.every(mov => mov > 0));
+
+//veamos ahora la cuenta 4 que posee solo movimientos positivos
+console.log(account4.movements.every(mov => mov > 0));
+
+//veamos lo ultimo, hasta ahora todas las funciones de los metodos los hemos creado directamente, pero eso no es necesario podemos crear esta funcion separada y luego pasarsela al metodo como funcion callBack. de esta menera podemos reutilizar esta si es requerida en alguna ora parte.
+const depositos = mov => mov > 0;
+console.log(account4.movements.every(depositos));
+*/
+/*
+console.log('FLAP Y FLAPMAP');
+// basicamente lo que hace este metodo FLAP es aplanar un array en otras palabras quita los array anidados devolviendonos un nuevo array con todos los elementos individuales.
+const arr = [[1, 2, 3], [4, 9, 5, 6], 7, 8, 9];
+console.log(arr.flat());
+
+//por defecto la profundidad es 1 osea que quitara solo 1 anidado si tenemos mas de un array anidado nos aplanara el primero y el otro lo dejara asi tal cual como se muestra en el ejemplo. ahora podemos especificar la profundiad del aplanamiento para que aplane todo y nos devuelva los elementos individuales tal como en el ejemplo.
+const otro = [[1, 2, 3], [4, [9], 5, 6], 7, 8, 9];
+console.log(otro.flat(2));
+
+//veamos un ejemplo mas util con este metodo, que pasa si el banco quiere sumar todos los movimientos de todas las cuentas para tener un saldo total.
+
+//primero obtengo en un array nuevo con todos los movimientos de todas las cuentas, el resultado de esto sera un array con los 4 array(movimientos) de las cuentas
+const movimientosCuestas = accounts.map(acc => acc.movements);
+console.log(movimientosCuestas);
+
+//aplanamos el array anidado anterior
+const movimientos = movimientosCuestas.flat();
+console.log(movimientos);
+
+//por ultimo sumamos todo
+const sumaTotal = movimientos.reduce((acu, mov) => acu + mov, 0);
+console.log(sumaTotal);
+
+//como sabemos podemos encadenar estos metodos ya que todos devuelven un nuevo array menos el REDUDE por eso lo dejamos para el final.
+const todosLosMovimientos = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acu, mov) => acu + mov, 0);
+console.log(todosLosMovimientos);
+
+//NOTA usar map y luego flat es una operacion muy recurrente en javascript, es por esa razon que este metodo se creo porque es mejor usarlo ya que es mejor para el rendiemiento.
+
+//basicamente se ve igual que el metodo map, de hecho nesecita lo mismo que el metodo map. solamente que internamente realiza un aplanamiento comun osea de profundidad 1
+const todosLosMovimientos2 = accounts
+  .flatMap(cuenta => cuenta.movements)
+  .reduce((acu, mov) => acu + mov, 0);
+console.log(todosLosMovimientos2);
+*/
+/*
+console.log('ORDENANDO ARRAYS (SORT)');
+// este metodo 'sort' lo que realiza por defecto es ordenar alfabetica segun la tabla 'unicode', pero para hacerlo mas facil de entender sort ordenara alfabeticamente los string. ahora para ordenar numeros este metodo los tomara como si fuesen string por lo que el resultado no sera el esperado. afortunadamente este metodo recibe una calBack function y en esta podemos especificar como queremos oredenar el array.
+//# lo que debemos tener en cuenta es que esta funcion recibe 2 parametros y estos siempre seran el (valor actual, valor siguiente) y los comparara, si el resultado de la comparacion es un valor < a cero el valor actual estara antes que el valor siguiente, pero si el resultado de la comparacon es un valor > a cero sera el valor siguiente el que estara antes que el valor actual.
+
+//con los string no hay problemas
+const dueños = ['jonas', 'zach', 'adam', 'martha'];
+console.log(dueños.sort());
+//recordar que este metodo muta la matriz original
+console.log(dueños);
+
+//pero cuando son numeros los que queremos ordenar, el resultado no es lo que podriamos esperar, basicamente tomo cada uno de los numeros por separado como si fuesen string y los ordeno alfabeticamente.
+const movimientos5 = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+console.log(movimientos5.sort());
+
+// pero como se menciono podemos pasarle una funcion callback esta como se explico tiene un comportamiento especifico con respecto a los 2 parametros que recibe que debemos tener en cuenta para que el orden que queramos de resultado.
+const uno = movimientos5.sort((a, b) => {
+  //#si retornamos un valor < 0 = a, b (mantiene el orden)
+  //#si retornamos un valor > 0 = b, a (cambia el orden)
+  // si queremos un orden ascendente solo debemos comparar 2 valores y retornar segun quereamos oredenar
+  if (a > b) return 1;
+  else if (a < b) return -1;
+});
+console.log(uno);
+
+const dos = movimientos5.sort((a, b) => {
+  //si queremos ordenar descendentemente, de mayor a menor
+  if (a > b) return -1;
+  else if (a < b) return 1;
+});
+console.log(dos);
+
+//# veamos como podemos mejorar esto analizandolo matematicamte. si a es > b entonces a -b siempre sera un numero positivo. si a es < b entonces a - b siempre sera un numero negativo, entonces pódemos hacer lo siguiente
+const tres = movimientos5.sort((a, b) => b - a);
+console.log(tres);
+*/
+console.log('LLENANDO ARRAY MEDIANTE PROGRAMASION');
+/*
+//hasta ahora hemos estado creando arrays y llenandolos manualmente
+const array = [1, 2, 3, 4, 5, 6, 7];
+console.log(array);
+console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+
+//pero podemos llenar un array mediante programasion, si le pasamos un solo argumento creando el array de esta manera (funcion constructora) creara un array vacio con una longitud equivalente al valor pasado. en otras palabras un array con 7 espacios vacios.
+const x = new Array(7);
+console.log(x);
+
+//ahora esta particularidad de la funcion constructora puede llevar a errores si no se presta atencion, de todas maneras este array es casi inservible no podemos usarlo para casi nada y digo casi porque hay un solo metodo que podemos llamar con este array y ese el FILL muy similar a slice
+
+//si le pasamos un solo valor llenara el array completo con ese valor
+x.fill(1);
+console.log(x);
+
+//pero este array puede recibir 3 parametros el valor con cual se llenara, un inicio de donde comenzara a llenar y un final(no incluido) hasta donde se llenara. como se aprecio en el ejercicio anterior si se omite el inicio y el final estos seran por defecto cero y el ultimo
+console.log(array.fill(2, 3, 4));
+
+//otra forma de llenar estos array vacios es con el metodo 'FROM'. simpre usando la funcion constructora, el metodo from recibe 3 parametros el primero simpre sera un objeto iterable, el segundo sera una funcion map y la tercera y opcional un parametro que hara referencia a cada elemento del array como si fuera THIS.
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+//ahora como este metodo recibe una funcion podremos llenar no solo con numeros repetidos el array RECORDAR que el guion bajo es para decirle a java que no tome en cuenta el primer parametro
+const z = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z);
+
+//ARRAY.FROM fue introducido para transformar estructuras de datos iterables(maps, string, sets, NodeList) a arrays.de hecho esta estructura NodeList es uno de los casos de uso mas frecuente de Array.from. ya que esta estructura no posee muchos de los metodos que los array poseen.
+
+//EJEMPLO supongamos que no tenemos en ninguna parte de nuestro codigo la lista de los movimientos. solo estan en la interfaz y queremos sumarlos para obtener el total. pues tendriamos que usar
+
+labelBalance.addEventListener('click', function () {
+  //es de un querySelector por ejemplo el que obtenemos una NodeList la cual se la pasamos como primer parametro y como segundo parametro le pasamos una funcion, de esta manera convertimos esta nodeLista a un array y ya siemdo array podemos usar el metodo replace
+  const movimientosUi = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('€', ''))
+  );
+  console.log(movimientosUi);
+});
+
+//ahora esta es otro forma de crear un array de una NodeList ,pero tendriamos que utilizar una funcion aparte NOTA solo obtenemos 2 elementos estos son los elementos predeterminados que estan en el html debemos usar un listener como en el ejemplo de arriba para obtener los elementos de la interfaz. en cualquier cosa USAR ARR5AY.FROM ES UNA MEJOR OPCION EN ESTOPS CASOS.
+const movimientosUi2 = [...document.querySelectorAll('.movements__value')];
+console.log(movimientosUi2);
+*/
+//*por ultimno repasaremos algunos metodos vistos en esta seccion
+
+//1-calculemos cual es la suma de los todos los depositos que tenemos en nuestra aplicasion
+const sumaDepositosBanco = accounts
+  .map(mov => mov.movements)
+  .flat()
+  .filter(mov => mov > 0)
+  .reduce((acumu, ele) => acumu + ele, 0);
+console.log(sumaDepositosBanco);
+
+//2- calculemos cuantos depositos hay que sean iguales o superiores a 1000
+const depoIgualSupe1000 = accounts
+  .flatMap(mov => mov.movements)
+  .filter(mov => mov >= 1000).length;
+console.log(depoIgualSupe1000);
+
+//esta es otra manera de realizar el mismo ejercicio anterior utilizando el metodo REDUCE, tener en cuenta que cumu + 1 = acumu++, pero hay un pequeño problema con esto ya que este operador devuelve el valor anterior(previo al incremento). afortunadamente podemos usar el operador ++acumu que nos devolvera inmediatamente el valor incrementado
+const depoIgualSupe10002 = accounts
+  .flatMap(mov => mov.movements)
+  .reduce((acumu, ele) => (ele >= 1000 ? ++acumu : acumu), 0);
+console.log(depoIgualSupe10002);
+
+//veamos un ejemplo de este operador, vemos que aumenta en 1, pero devuelve el valor anterior al incremento.devemos volver a llamarlo para ver el valor aumentado. que es lo que huviera pasado si lo utilizamos dandonos un resultado erroneo.
+let a = 10;
+console.log(a++);
+console.log(a);
+
+//3-en este ejercicio veremos que el valor final al reducir los valores con el metodo 'reduce' puede ser cualquier o casi cualquier cosa en este ejemplo creamos un 'objeto final' con la suma total de los depositos y los retiros
+const sumasDepReti = accounts
+  .flatMap(ele => ele.movements)
+  .reduce(
+    (acumu, ele) => {
+      ele > 0 ? (acumu.depositos += ele) : (acumu.retiros += ele);
+      //importante con este metodo reduce siempre debemos retornar el acumulador en este caso debe ser explisito
+      return acumu;
+    },
+    //importante entender que en este ejemplo el acumulador es el objeto que hemos creado
+    { depositos: 0, retiros: 0 }
+  );
+console.log(sumasDepReti);
+
+//veamos como podemos mejorar este codigo un poco mas, aplicando cosas que ya hemos visto, desctructuramos dentro de un objeto, porque es de un objeto donde sacamos los valores que tomaran estas 2 variables
+const { depositos, retiros } = accounts
+  .flatMap(ele => ele.movements)
+  .reduce(
+    (acumu, ele) => {
+      //RECORDAR que si queremos usar una variable como una propiedad debemos usar los corchetes
+      acumu[ele > 0 ? 'depositos' : 'retiros'] += ele;
+      return acumu;
+    },
+    { depositos: 0, retiros: 0 }
+  );
+console.log(depositos, retiros);
+
+//4-en este ejercicio creamos una funcion que tranforme cualquier cadena en un caso de titulo osea que todas las primeras letras de una palabra esten en mayuscula con algunas execciones.
+const converTitleCase = function (titulo) {
+  const capitalizacion = str => str[0].toUpperCase() + str.slice(1);
+  //en este tipo de ejercicios siempre es buena practica tener en un array las execciones, en este ejemplo usamos algunas, pero son muchas mas.
+  const expctions = ['a', 'an', 'and', 'the', 'but', 'or', 'on', 'in', 'with'];
+
+  //lo primero a realizar es convertir todo a minusculas, para luego separar cada una de estas palabras. de esta manera poder trabajar con ellas devolviendo un array con cada una de ellas con la primera letra en mayusculas ignorando las expsiones. para finalmente unir todas. NOTA para el problema de la palabra 'and' lo que tenemos que hacer es aplicar la capitalizacion cuando retornemos el titulo, por lo que crearemos en una funcion separada esta logica.
+  const tituloCase = titulo
+    .toLowerCase()
+    .split(' ')
+    .map(palabra =>
+      expctions.includes(palabra) ? palabra : capitalizacion(palabra)
+    )
+
+    .join(' ');
+  return capitalizacion(tituloCase);
+};
+
+console.log(converTitleCase('esta es una cadena a considerar'));
+console.log(converTitleCase('este es otro TITULO un poco mas largo'));
+console.log(converTitleCase('this is a another title but not too long'));
+//con la palabra 'and' tenemos un problema ya que and si la queremos con mayuscula(And), pero esta dentro de las expsiones
+console.log(converTitleCase('and here is another title'));
