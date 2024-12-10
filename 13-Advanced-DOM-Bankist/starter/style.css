@@ -41,6 +41,7 @@ body {
   transition: transform 1s, opacity 1s;
 }
 
+/*cuando se elimina esta clase la opacidad vuelve a ser 100% y la traslacion vuelve a ser 0*/
 .section--hidden {
   opacity: 0;
   transform: translateY(8rem);
@@ -315,7 +316,7 @@ h4 {
 }
 
 .operations__content {
-  display: none;
+  display: none; /*esta oculta*/
 
   /* JUST PRESENTATIONAL */
   font-size: 1.7rem;
@@ -323,7 +324,7 @@ h4 {
 }
 
 .operations__content--active {
-  display: grid;
+  display: grid; /*ya no esta oculta*/
   grid-template-columns: 7rem 1fr;
   column-gap: 3rem;
   row-gap: 0.5rem;
@@ -458,7 +459,7 @@ h4 {
 }
 
 .dots__dot--active {
-  /* background-color: #fff; */
+  /*background-color: #fff;*/
   background-color: #888;
   opacity: 1;
 }

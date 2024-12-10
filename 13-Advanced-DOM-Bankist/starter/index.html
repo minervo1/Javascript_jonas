@@ -12,26 +12,33 @@
     />
     <link rel="stylesheet" href="style.css" />
     <title>Bankist | When Banking meets Minimalist</title>
+    <script defer src="script.js"></script>
   </head>
   <body>
     <header class="header">
       <nav class="nav">
+        <!-- el atributo src la url relativa, osea es la ruta en la cual se encuentra en la carpeta del html. la url que vemos en la consola es la url adsoluta osea mas alla de la carpeta-->
         <img
           src="img/logo.png"
           alt="Bankist logo"
           class="nav__logo"
           id="logo"
+          designer="nelson"
+          data-version-number="3.0"
         />
         <ul class="nav__links">
           <li class="nav__item">
-            <a class="nav__link" href="#section--1">Features</a>
+            <a class="nav__link" href="#section--1">Features</a
+            ><!-- href=#section--1 es un nancla-->
           </li>
           <li class="nav__item">
-            <a class="nav__link" href="#section--2">Operations</a>
+            <a class="nav__link" href="#section--2">Operations</a
+            ><!--ira automaticamernte a esta seccion-->
           </li>
           <li class="nav__item">
             <a class="nav__link" href="#section--3">Testimonials</a>
           </li>
+          <!--como este actualmente no es un boton si no un link el comportamiento predeteerminadoes es que al realizar click en el salte a la parte superior de la pantalla, por eso usamos el 'preventDefault' -->
           <li class="nav__item">
             <a class="nav__link nav__link--btn btn--show-modal" href="#"
               >Open account</a
@@ -41,6 +48,7 @@
       </nav>
 
       <div class="header__title">
+        <!--esta es una forma antigua y no recomendada de escuchar un evento usamos el atributo 'onclick'. (<h1 onclick="alert('escuchando con html')">)-->
         <h1>
           When
           <!-- Green highlight effect -->
@@ -350,6 +358,6 @@
     </div>
     <div class="overlay hidden"></div>
 
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
   </body>
 </html>
